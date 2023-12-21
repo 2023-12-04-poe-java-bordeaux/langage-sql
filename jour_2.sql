@@ -103,4 +103,33 @@ SELECT name AS modèle,
 -- Q8. Afficher tous les téléphones dont le prix total des ventes est supérieur à 1300000€.
 SELECT name AS telephone,
   price * units_sold AS revenu_total FROM telephones WHERE (price * units_sold) > 1300000;
- 
+  
+  
+-- GOUP BY
+SELECT manufacturer FROM telephones;
+SELECT * FROM telephones ORDER BY manufacturer;
+
+SELECT manufacturer FROM telephones GROUP BY manufacturer;
+SELECT name, manufacturer FROM telephones GROUP BY manufacturer;
+
+SELECT manufacturer, SUM(units_sold)  FROM telephones GROUP BY manufacturer;
+SELECT manufacturer, SUM(units_sold) AS quantity, COUNT(id)  FROM telephones GROUP BY manufacturer;
+
+
+-- groupe dont unit solde is greater than 10000
+SELECT 
+	manufacturer,
+	SUM(units_sold),
+	COUNT(id) 
+FROM telephones 
+GROUP BY manufacturer
+HAVING SUM(units_sold) > 10000;
+
+SELECT 
+	manufacturer,
+	SUM(units_sold),
+	COUNT(id)  
+FROM telephones
+GROUP BY manufacturer 
+HAVING manufacturer = 'Apple' OR manufacturer = 'Google' 
+ORDER BY COUNT(id);
