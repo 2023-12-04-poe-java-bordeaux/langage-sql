@@ -133,3 +133,48 @@ FROM telephones
 GROUP BY manufacturer 
 HAVING manufacturer = 'Apple' OR manufacturer = 'Google' 
 ORDER BY COUNT(id);
+
+-- Sous-requetes
+SELECT * FROM books;
+
+DROP TABLE IF EXISTS books;
+CREATE TABLE IF NOT EXISTS books (
+	id SERIAL,
+	title VARCHAR(150),
+	year_published SMALLINT,
+	publisher VARCHAR(50),
+	price NUMERIC(6,2)
+);
+
+INSERT INTO books (title, year_published, publisher, price) VALUES
+('Introduction au SQL', 2000, 'Packt', 15.49),
+('La methode Agile', 2005, 'Oreilly', 23.99),
+('Git & GitHub', 2020, 'Oreilly', 41.99),
+('SQL pour l''analyse des données', 2021, 'Oreilly', 59.99),
+('Le CSS', 2014, 'Wiley', 15.99),
+('SQL : éléments internes de la base de données', 2018, 'Packt', 63.75),
+('Java: Introduction', 2014,'Wiley', 11.99),
+('Laravel pour les nuls', 2012, 'Apress', 23.99),
+('L''art du SQL', 2015, 'Wiley', 27.75);
+
+SELECT * FROM books WHERE title ILIKE '%SQL%';
+SELECT * FROM books WHERE price > 20;
+
+SELECT * FROM books WHERE title ILIKE '%SQL%' AND price > 20;
+
+SELECT * FROM books WHERE title ILIKE '%SQL%' AND id IN (SELECT id FROM books WHERE price > 20);
+
+-- 1
+SELECT id FROM books WHERE price > 20
+-- 2
+SELECT * FROM books WHERE title ILIKE '%SQL%' AND id IN (2, 3, 4, 6, 8, 9);
+
+-- CASE: Pour les colonnes conditionelles
+SELECT *, 
+CASE
+	WHEN price > 20 THEN 'Tres Cher'
+	WHEN price > 15 THEN 'Pas mal'
+	WHEN price > 12 THEN 'Abordable'
+	ELSE 'Moins cher'
+END
+AS "Avis sur prix" FROM books;
