@@ -127,3 +127,4 @@ SELECT AVG(price) FROM books;
 
 -- ROUND
 SELECT ROUND(AVG(price)) FROM books;
+
