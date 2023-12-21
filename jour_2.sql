@@ -226,3 +226,37 @@ SELECT * FROM books WHERE id = 3;
 
 INSERT INTO books_authors (book_id, author_id) VALUES (1, 3), (4, 4),(5, 4),(3, 1),(7, 3),(8, 3),(6, 3),(8, 3);
 
+-- Suppression avec contraintes
+DELETE FROM books WHERE id = 1;
+
+-- Suppression de la contrainte FKEY: suppression de la refernce
+ALTER TABLE books_authors
+DROP CONSTRAINT books_authors_book_id_fkey,
+ADD CONSTRAINT books_authors_book_id_fkey 
+FOREIGN KEY(book_id) REFERENCES books
+ON DELETE CASCADE
+
+DELETE FROM books WHERE id = 1;
+
+SELECT * FROM books;
+SELECT * FROM books_authors;
+
+-- Suppression de la contrainte FKEY: modification de la refernce
+ALTER TABLE books_authors
+DROP CONSTRAINT books_authors_book_id_fkey,
+ADD CONSTRAINT books_authors_book_id_fkey 
+FOREIGN KEY(book_id) REFERENCES books
+ON DELETE SET NULL(book_id);
+
+DELETE FROM books WHERE id = 4;
+
+
+
+
+
+
+
+
+
+
+
