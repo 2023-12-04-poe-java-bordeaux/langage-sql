@@ -177,4 +177,4 @@ CASE
 	WHEN price > 12 THEN 'Abordable'
 	ELSE 'Moins cher'
 END
-AS "Avis sur prix" FROM books;
+AS "Avis sur prix" FROM 
