@@ -45,3 +45,76 @@ UPDATE books SET price=17.49 WHERE id =1 RETURNING *
 
 INSERT INTO authors (first_name, last_name) VALUES ('Nicolas', 'Guerin')
 INSERT INTO authors (first_name, last_name) VALUES ('Wahiba', 'Ghezali') RETURNING *
+
+-- JOINTURES
+-- Modifiez la table books en remplacant la colone publisher par publisher_id INTEGER
+-- Puis crer une table publishers telles que:
+DROP TABLE IF EXISTS publishers;
+CREATE TABLE IF NOT EXISTS publishers (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(50) NOT NULL
+);
+INSERT INTO publishers (name) VALUES ('Packt'), ('Oreilly'), ('Wiley'), ('Apress');
+
+
+SELECT * FROM publishers;
+
+/*
+SELECT [columns] premierer_table
+JOIN deuxieme_table
+ON condition
+....
+*/
+
+-- INNER JOIN
+
+SELECT publishers.name FROM books
+INNER JOIN publishers
+ON books.publisher_id = publishers.id
+WHERE books.id = 1
+
+-- Condition du join telle que books.publisher_id > publishers.id. Ceci n'a pas trop de sense
+SELECT * FROM books
+INNER JOIN publishers
+ON books.publisher_id > publishers.id
+
+-- LEFT JOIN
+SELECT * FROM books
+LEFT JOIN publishers
+ON books.publisher_id = publishers.id
+
+-- La commande precedednte ramenre le meme resultat. Et si on ajouter un novel edieteur sans lui attribuer des livres.
+INSERT INTO publishers (name) VALUES ('m2i')
+
+-- Reessayons le LEFT JOIN cette fois, mais inversons l'ordre des tables. publishers devient la premiere table(gauche)
+SELECT * FROM publishers
+LEFT JOIN books
+ON books.publisher_id = publishers.id
+
+-- LEFT OUTER JOIN
+SELECT * FROM publishers
+LEFT JOIN books
+ON books.publisher_id = publishers.id
+WHERE books.publisher_id IS NULL
+
+-- JOIN sur 3 tables
+SELECT * FROM books
+JOIN books_authors
+ON books.id = books_authors.book_id
+JOIN authors
+ON authors.id = books_authors.author_id
+
+-- JOIN en selectionnant des colonnes specifiques
+SELECT authors.id, title, author_id, first_name, last_name FROM books
+JOIN books_authors
+ON books.id = books_authors.book_id
+JOIN authors
+ON authors.id = books_authors.author_id
+
+-- Les alias avec les jointures
+SELECT a.id, b.title, ba.author_id, a.first_name, a.last_name FROM books AS b
+JOIN books_authors AS ba
+ON b.id = ba.book_id
+JOIN authors AS a
+ON a.id = ba.author_id
+
