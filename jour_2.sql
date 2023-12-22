@@ -250,13 +250,34 @@ ON DELETE SET NULL(book_id);
 
 DELETE FROM books WHERE id = 4;
 
+-- tables temporaires
+/*
+-- 1
+SELECT id FROM books WHERE price > 20
+-- 2
+SELECT * FROM books WHERE title ILIKE '%SQL%' AND id IN (2, 3, 4, 6, 8, 9);
+*/
+
+WITH
+	expensive_books AS (SELECT * FROM books WHERE price > 30),
+	sql_books AS (SELECT * FROM books WHERE title ILIKE '%sql%')
+SELECT * FROM sql_books WHERE id in (SELECT id FROM expensive_books);
 
 
+SELECT * FROM books;
 
 
+CREATE TABLE IF NOT EXISTS error_books (
+	id SERIAL PRIMARY KEY,
+	title VARCHAR(150) NOT NULL,
+	year_published SMALLINT NOT NULL,
+	publisher VARCHAR(50) NOT NULL,
+	price NUMERIC(6,2) NOT NULL CHECK(price>0)
+);
 
+WITH
+	error_rows AS (DELETE FROM books WHERE title ILIKE '%sql%' RETURNING *)
+INSERT INTO error_books (SELECT * FROM error_rows)
 
-
-
-
-
+SELECT title, price AS Prix FROM books;
+SELECT * FROM error_books;
